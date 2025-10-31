@@ -1,0 +1,44 @@
+---
+- name: Add EPEL Repository (CentOS)
+  tags: centos,nagios
+  package:
+    name: epel-release
+    state: present
+  when: ansible_distribution == "CentOS"
+
+- name: Install Nagios (CentOS)
+  tags: centos,nagios
+  package:
+    name:
+      - nagios
+      - nagios-plugins
+      - nagios-plugins-disk
+      - nagios-plugins-http
+      - nagios-plugins-load
+      - nagios-plugins-ping
+      - nagios-plugins-procs
+      - nagios-plugins-users
+    state: present
+  when: ansible_distribution == "CentOS"
+
+- name: Install Nagios (Ubuntu)
+  tags: ubuntu,nagios
+  apt:
+    name: nagios4
+    state: present
+    update_cache: yes
+  when: ansible_distribution == "Ubuntu"
+
+- name: Nagios Restart/Enable (Ubuntu)
+  service:
+    name: nagios4
+    state: restarted
+    enabled: true
+  when: ansible_distribution == "Ubuntu"
+
+- name: Nagios Restart/Enable (CentOS)
+  service:
+    name: nagios
+    state: restarted
+    enabled: true
+  when: ansible_distribution == "CentOS"
